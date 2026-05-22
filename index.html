@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Locator - Sajai Enterprises</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #eef2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #0b1329;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .header {
+            background: linear-gradient(90deg, #5de0e6, #0072ff);
+            padding: 35px 20px;
+            text-align: center;
+            color: #0b1329;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .title {
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 35px;
+            letter-spacing: 0.5px;
+        }
+
+        .instructions-box {
+            background-color: #111a36;
+            border-left: 4px solid #00d2ff;
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 35px;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+            border-right: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .instructions-box h3 {
+            color: #00d2ff;
+            font-size: 16px;
+            margin-bottom: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .instructions-box p {
+            color: #707e94;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .instructions-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .instruction-heading {
+            color: #00a2ff;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .search-section {
+            background-color: #0e1731;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .search-label {
+            color: #707e94;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .search-dropdown {
+            width: 100%;
+            max-width: 650px;
+            background-color: #0b1329;
+            border: 2px solid #00d2ff;
+            border-radius: 8px;
+            padding: 16px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            outline: none;
+            text-align-last: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .search-dropdown:focus {
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+            border-color: #5de0e6;
+        }
+
+        .search-dropdown option {
+            background-color: #111a36;
+            color: #ffffff;
+            font-weight: normal;
+        }
+
+        .results-section {
+            background-color: #111a36;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 45px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .results-title {
+            color: #00d2ff;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-item {
+            color: #94a3b8;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .info-item strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item span {
+            color: #cbd5e1;
+        }
+
+        .footer-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 35px;
+            text-align: center;
+        }
+
+        .stat-column {
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-column:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #4b5875;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Sajai Enterprises</h1>
+        </div>
+
+        <div class="content">
+            <div class="title">Factory Locator</div>
+
+            <div class="instructions-box">
+                <h3>Instructions to Locate Factory Details:</h3>
+                <p>You can select by Vendor Code, find the manufacturing unit and FSSAI license number for your pack.
+                </p>
+
+                <p>
+                    <span class="instruction-heading">To Search by Vendor Code:</span>
+                    For manufacturing unit and FSSAI license number, enter first two characters of Batch No. in the
+                    search box. e.g. AA
+                </p>
+
+            </div>
+
+            <div class="search-section">
+                <label class="search-label" for="vendorDropdown">Search Vendor Code</label>
+                <select id="vendorDropdown" class="search-dropdown">
+                    <option value="" disabled selected> Select Vendor Code From List </option>
+                    <option value="SOL">SOL (Sajai enterprises Solapur)</option>
+                    <option value="SAT">SAT (Sajai enterprises Satara)</option>
+                    <option value="THA">THA (Sajai enterprises Thane)</option>
+                </select>
+            </div>
+
+            <div id="resultsCard" class="results-section">
+                <div class="results-title">Factory Information Details</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Manufacturing Unit / Address:</strong>
+                        <span id="resAddress">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>FSSAI ID:</strong>
+                        <span id="resFssai">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Contact Name:</strong>
+                        <span id="resContact">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Contact Details:</strong>
+                        <span id="resPhone">-</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const vendorDatabase = {
+            "SOL": {
+                address: "Gat no 903/2,A/P Laxmi dahiwadi, near yemai Mandir,Tal.Mangalwedha,Solapur, Maharashtra -413305",
+                fssai: "11525999000282",
+                contact: "Customer care",
+                phone: "+91 90221 22121"
+            },
+            "SAT": {
+                address: "Gat No. 868,Upale (Mayani),Tondoli Road, District:Sangli ,State:Maharashtra, Pin:415305",
+                fssai: "11525999000282",
+                contact: "Customer care",
+                phone: "+91 90221 22121"
+            },
+            "THA": {
+                address: "Sol Packagings Corporate Block, Sector 4, GIDC, Ahmedabad, 382445",
+                fssai: "11525999000282",
+                contact: "Customer care",
+                phone: "+91 90221 22121"
+            }
+        };
+
+        const vendorDropdown = document.getElementById('vendorDropdown');
+        const resultsCard = document.getElementById('resultsCard');
+
+        const resAddress = document.getElementById('resAddress');
+        const resFssai = document.getElementById('resFssai');
+        const resContact = document.getElementById('resContact');
+        const resPhone = document.getElementById('resPhone');
+
+        vendorDropdown.addEventListener('change', function (event) {
+            const selectedCode = event.target.value;
+
+            if (vendorDatabase[selectedCode]) {
+                const targetRecord = vendorDatabase[selectedCode];
+
+                resAddress.textContent = targetRecord.address;
+                resFssai.textContent = targetRecord.fssai;
+                resContact.textContent = targetRecord.contact;
+                resPhone.textContent = targetRecord.phone;
+
+                resultsCard.classList.add('active');
+            } else {
+                resultsCard.classList.remove('active');
+            }
+        });
+
+    </script>
+</body>
+
+</html>
